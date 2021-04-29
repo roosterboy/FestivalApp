@@ -7,77 +7,20 @@
 
 import SwiftUI
 
-let festivalJSON = """
-{
-  "fest" : {
-    "days" : "10, 11, 17, 18",
-    "year" : "2021",
-    "shows" : [
-      {
-        "id" : 1,
-        "showName" : "The Duelist",
-        "stageName" : "Queen",
-        "description" : "Comedy Sword Play",
-        "time" : [
-          1619659651,
-          1619660251,
-          1619661031,
-          1619664702
-        ],
-        "isFavorite" : false,
-        "oneNight" : false
-      },
-      {
-        "id" : 2,
-        "showName" : "The Bilge Pumps",
-        "stageName" : "Queen",
-        "description" : "Pirate Comedy Band",
-        "time" : [
-          1619659651,
-          1619660251,
-          1619661031,
-          1619664648
-        ],
-        "isFavorite" : false,
-        "oneNight" : false
-      },
-      {
-        "id" : 3,
-        "showName" : "Whiskey Bay Rovers",
-        "stageName" : "Compass Rose Pirate Pub",
-        "description" : "Shanty Band",
-        "time" : [
-          1619659651,
-          1619660251,
-          1619661031,
-          1619664637
-        ],
-        "isFavorite" : false,
-        "oneNight" : false
-      },
-
-      {
-        "id" : 16,
-        "showName" : "Bayou Cirque",
-        "stageName" : "Washing Well Stage",
-        "description" : "Circus Acrobatics",
-        "time" : [
-          1619664631
-        ],
-        "isFavorite" : false,
-        "oneNight" : false
-      }
-    ]
-  }
-}
-"""
-
 struct FestivalView: View {
     
     //so we don't have to keep typing [ShowOffset:[Show]]
-    typealias ShowDict = [ShowOffset:[ShowDisplay]]
+    typealias ShowDict = [ShowOffset:[Show]]
     
     @State private var festival: Fest2? = nil
+    
+    //set the every parameter to however often (in seconds) you want
+    // this timer to fire
+    let timer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
+    
+    //this is used to update the main view whenever the timer fires
+    //we initialize it to the current time when the View is created
+    @State private var listID = Date().timeIntervalSince1970
     
     //since it's expensive to create DateFormatters, we
     // don't want to do it every time we call getSystemTimeAsString
@@ -90,17 +33,49 @@ struct FestivalView: View {
     }()
     
     //component Views
+    func showsSections(for section: ShowOffset, showList: [Show]) -> some View {
+        let shows: [Show]
+        if section == .future {
+            //sort by time
+            shows = showList.sorted {
+                //if two shows have the same time, sort them by name
+                if $0.times[0] == $1.times[0] {
+                    return $0.showName < $1.showName
+                }
+                return $0.times[0] < $1.times[0]
+            }
+        } else {
+            //sort by showName
+            shows = showList.sorted {
+                //if two shows have the same name, sort them by time
+                if $0.showName == $1.showName {
+                    return $0.times[0] < $1.times[0]
+                }
+                return $0.showName < $1.showName
+            }
+        }
+        
+        return Section(header: sectionHeader(for: section.label)) {
+            ForEach(shows) { show in
+                showRow(from: show)
+            }
+            .padding()
+        }
+    }
+    
     func sectionHeader(for section: String) -> some View {
         Text(section).bold() //.textCase(.uppercase)
     }
     
-    func showRow(from show: ShowDisplay) -> some View {
+    func showRow(from show: Show) -> some View {
         VStack {
             HStack {
                 Text(show.showName)
                 Spacer()
-                Text(getSystemTimeAsString(time: show.time))
-                Image(systemName: "info.circle")
+                Text(getSystemTimeAsString(time: show.times[0]))
+                NavigationLink(destination: Text(show.showName)) {
+                    Image(systemName: "info.circle")
+                }
             }
             HStack {
                 Text(show.stageName)
@@ -110,51 +85,31 @@ struct FestivalView: View {
         }
     }
     
-    func showsSections(for section: ShowOffset, showList: [ShowDisplay]) -> some View {
-        let shows: [ShowDisplay]
-        if section == .future {
-            //sort by time
-            shows = showList.sorted {
-                if $0.displayTime == $1.displayTime {
-                    return $0.showName < $1.showName
-                }
-                return $0.displayTime < $1.displayTime
-            }
-        } else {
-            //sort by showName
-            shows = showList.sorted {
-                if $0.showName == $1.showName {
-                    return $0.displayTime < $1.displayTime
-                }
-                return $0.showName < $1.showName
-            }
-        }
-        return Section(header: sectionHeader(for: section.label)) {
-            ForEach(shows) { show in
-                showRow(from: show)
-            }
-            .padding()
-        }
-    }
-    
     //main View body
     var body: some View {
-        ScrollView {
-            VStack {
-                Text("Upcoming Shows")
-                    .font(.largeTitle)
-                    .bold()
-                Divider()
-            }
-            
-            let showDict = generateShowsDict()
-            ForEach(ShowOffset.allCases, id: \.self) { key in
-                if let showList = showDict[key] {
-                    showsSections(for: key, showList: showList)
+        NavigationView {
+            ScrollView {
+                VStack {
+                    Text("Upcoming Shows")
+                        .font(.largeTitle)
+                        .bold()
+                    Divider()
                 }
+                
+                let showDict = generateShowsDict()
+                ForEach(ShowOffset.allCases, id: \.self) { key in
+                    if let showList = showDict[key] {
+                        showsSections(for: key, showList: showList)
+                    }
+                }.id(listID)
+            }
+            .navigationBarHidden(true)
+            .onAppear(perform: loadJSON)
+            .onReceive(timer) { input in
+                //update the id of the ForEach loop to force a refresh
+                listID = input.timeIntervalSince1970
             }
         }
-        .onAppear(perform: loadJSON)
     }
     
     func loadJSON() {
@@ -173,7 +128,7 @@ struct FestivalView: View {
                 for time in show.times {
                     let minutes = getMinutes(date: time)
                     if minutes >= 0 {
-                        displayDict[ShowOffset.getOffsetFromMinutes(from: minutes), default: []].append(ShowDisplay(from: show, at: time))
+                        displayDict[ShowOffset.getOffsetFromMinutes(from: minutes), default: []].append(Show(from: show, at: time))
                     }
                 }
             }
@@ -200,11 +155,6 @@ struct FestivalView: View {
         let diffs = Calendar.current.dateComponents([.minute], from: now, to: showTime)
         return  diffs.minute ?? 0
     }
-    
-    //    func getShowOffset(date: Double) -> ShowOffset {
-    //        let minutes = getMinutes(date: date)
-    //        return ShowOffset.getOffsetFromMinutes(from: minutes)
-    //    }
     
     //changed parameter type because Show.times is [Double]
     func getSystemTimeAsString(time: Double) -> String {

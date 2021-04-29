@@ -30,21 +30,6 @@ struct Show: Codable, Identifiable {
         case times = "time"
         case isFavorite, oneNight
     }
-    
-    //make a DateFormatter as a static member of the struct type
-    // so we can use it without having to recreate it every time
-    static let formatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "E, d MMM yyyy HH:mm:ss Z"
-        formatter.timeStyle = .short
-        return formatter
-    }()
-    
-    //this will return a String like "6:50 PM"
-    static func displayTime(_ time: Double) -> String {
-        let fullDate = Date(timeIntervalSince1970: time)
-        return Self.formatter.string(from: fullDate)
-    }
 }
 
 //created a custom init to build a Show from an existing Show
@@ -59,41 +44,6 @@ extension Show {
         times = [time]
         isFavorite = show.isFavorite
         oneNight = show.oneNight
-    }
-}
-
-struct ShowDisplay: Identifiable {
-    let id = UUID()
-    let showID: Int
-    let showName, stageName, description: String
-    let time: Double
-    let isFavorite, oneNight: Bool
-    let displayTime: String
-    
-    //make a DateFormatter as a static member of the struct type
-    // so we can use it without having to recreate it every time
-    static let formatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "E, d MMM yyyy HH:mm:ss Z"
-        formatter.timeStyle = .short
-        return formatter
-    }()
-    
-//    var displayTime: String {
-//        let fullDate = Date(timeIntervalSince1970: time)
-//        return Self.formatter.string(from: fullDate)
-//    }
-
-    init(from show: Show, at time: Double) {
-        showID = show.showID
-        showName = show.showName
-        stageName = show.stageName
-        description = show.description
-        self.time = time
-        isFavorite = show.isFavorite
-        oneNight = show.oneNight
-        
-        displayTime = Self.formatter.string(from: Date(timeIntervalSince1970: self.time))
     }
 }
 
