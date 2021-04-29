@@ -7,19 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3527BBCD263A479300E34DDC /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3527BBCC263A479300E34DDC /* Model.swift */; };
+		3527BBD0263A49CD00E34DDC /* Bundle+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3527BBCF263A49CD00E34DDC /* Bundle+ext.swift */; };
 		352E314D2638013B00145677 /* FestivalAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352E314C2638013B00145677 /* FestivalAppApp.swift */; };
-		352E314F2638013B00145677 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352E314E2638013B00145677 /* ContentView.swift */; };
 		352E31512638013D00145677 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 352E31502638013D00145677 /* Assets.xcassets */; };
 		352E31542638013D00145677 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 352E31532638013D00145677 /* Preview Assets.xcassets */; };
+		352E315D2638015700145677 /* FestivalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352E315C2638015700145677 /* FestivalView.swift */; };
+		352E3160263801AF00145677 /* FestivalJSON.txt in Resources */ = {isa = PBXBuildFile; fileRef = 352E315F263801AF00145677 /* FestivalJSON.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3527BBCC263A479300E34DDC /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		3527BBCF263A49CD00E34DDC /* Bundle+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+ext.swift"; sourceTree = "<group>"; };
 		352E31492638013B00145677 /* FestivalApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FestivalApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		352E314C2638013B00145677 /* FestivalAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivalAppApp.swift; sourceTree = "<group>"; };
-		352E314E2638013B00145677 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		352E31502638013D00145677 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		352E31532638013D00145677 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		352E31552638013D00145677 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		352E315C2638015700145677 /* FestivalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivalView.swift; sourceTree = "<group>"; };
+		352E315F263801AF00145677 /* FestivalJSON.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = FestivalJSON.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,10 +59,13 @@
 			isa = PBXGroup;
 			children = (
 				352E314C2638013B00145677 /* FestivalAppApp.swift */,
-				352E314E2638013B00145677 /* ContentView.swift */,
+				352E315C2638015700145677 /* FestivalView.swift */,
+				3527BBCF263A49CD00E34DDC /* Bundle+ext.swift */,
 				352E31502638013D00145677 /* Assets.xcassets */,
+				352E315F263801AF00145677 /* FestivalJSON.txt */,
 				352E31552638013D00145677 /* Info.plist */,
 				352E31522638013D00145677 /* Preview Content */,
+				3527BBCC263A479300E34DDC /* Model.swift */,
 			);
 			path = FestivalApp;
 			sourceTree = "<group>";
@@ -127,6 +136,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				352E31542638013D00145677 /* Preview Assets.xcassets in Resources */,
+				352E3160263801AF00145677 /* FestivalJSON.txt in Resources */,
 				352E31512638013D00145677 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -138,7 +148,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				352E314F2638013B00145677 /* ContentView.swift in Sources */,
+				3527BBCD263A479300E34DDC /* Model.swift in Sources */,
+				3527BBD0263A49CD00E34DDC /* Bundle+ext.swift in Sources */,
+				352E315D2638015700145677 /* FestivalView.swift in Sources */,
 				352E314D2638013B00145677 /* FestivalAppApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
